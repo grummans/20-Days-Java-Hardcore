@@ -1,4 +1,4 @@
-package com.dropchat.springboot_day1_jpa_crud.dto.response;
+package com.dropchat.springboot_day1_jpa_crud.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthenticationResponse {
-
+public class IntrospectRequest {
     private String token;
-
-    boolean authenticated;
-
 }

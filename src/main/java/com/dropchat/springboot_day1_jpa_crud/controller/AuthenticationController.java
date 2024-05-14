@@ -2,8 +2,11 @@ package com.dropchat.springboot_day1_jpa_crud.controller;
 
 import com.dropchat.springboot_day1_jpa_crud.dto.request.ApiResponse;
 import com.dropchat.springboot_day1_jpa_crud.dto.request.AuthenticationRequest;
+import com.dropchat.springboot_day1_jpa_crud.dto.request.IntrospectRequest;
 import com.dropchat.springboot_day1_jpa_crud.dto.response.AuthenticationResponse;
+import com.dropchat.springboot_day1_jpa_crud.dto.response.IntrospectResponse;
 import com.dropchat.springboot_day1_jpa_crud.service.AuthenticationService;
+import com.nimbusds.jose.JOSEException;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.text.ParseException;
 
 @RestController
 @RequestMapping("/auth")
@@ -23,11 +28,17 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        boolean result = authenticationService.isAuthenticated(request);
+        var result = authenticationService.isAuthenticated(request);
         return ApiResponse.<AuthenticationResponse>builder()
-                .result(AuthenticationResponse.builder()
-                        .authenticated(result)
-                        .build())
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/introspect")
+    ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
+        var result = authenticationService.introspectResponse(request);
+        return ApiResponse.<IntrospectResponse>builder()
+                .result(result)
                 .build();
     }
 
