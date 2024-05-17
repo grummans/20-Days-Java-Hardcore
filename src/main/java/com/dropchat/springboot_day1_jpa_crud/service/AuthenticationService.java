@@ -34,6 +34,7 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 public class AuthenticationService {
 
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -56,8 +57,6 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse isAuthenticated(AuthenticationRequest request) {
-
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         var user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

@@ -9,8 +9,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
-@Setter
 public class UserCreationRequest {
 
     @Size(min = 3, message = "USERNAME_INVALID")

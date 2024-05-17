@@ -4,20 +4,19 @@ import com.dropchat.springboot_day1_jpa_crud.dto.request.UserCreationRequest;
 import com.dropchat.springboot_day1_jpa_crud.dto.request.UserUpdateRequest;
 import com.dropchat.springboot_day1_jpa_crud.dto.response.UserResponse;
 import com.dropchat.springboot_day1_jpa_crud.entity.User;
+import com.dropchat.springboot_day1_jpa_crud.enums.Role;
 import com.dropchat.springboot_day1_jpa_crud.exception.AppException;
 import com.dropchat.springboot_day1_jpa_crud.exception.ErrorCode;
 import com.dropchat.springboot_day1_jpa_crud.mapper.UserMapper;
 import com.dropchat.springboot_day1_jpa_crud.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
+
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -27,18 +26,22 @@ public class UserService {
 
     private UserRepository userRepository;
     private UserMapper userMapper;
+    private PasswordEncoder passwordEncoder;
 
-    public User createUser(UserCreationRequest request) {
+    public UserResponse createUser(UserCreationRequest request) {
 
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
         User user = userMapper.toUser(request);
-
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        return userRepository.save(user);
+
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Role.USER.name());
+        user.setRoles(roles);
+
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public List<User> getUsers() {
