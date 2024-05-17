@@ -55,7 +55,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse isAuthenticated(AuthenticationRequest request){
+    public AuthenticationResponse isAuthenticated(AuthenticationRequest request) {
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -65,7 +65,7 @@ public class AuthenticationService {
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
-        if (!authenticated){
+        if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
@@ -76,7 +76,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    private String generateToken(String username){
+    private String generateToken(String username) {
 
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
@@ -102,8 +102,6 @@ public class AuthenticationService {
 
             throw new RuntimeException(e);
         }
-
-
     }
 
 }
